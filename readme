@@ -20,4 +20,4 @@ You can download your work by zipping the contents of the workspace and download
 
 $ zip search.zip *
 
-Right click the file "search.zip" in the explorer bar on th e left side, then choose "download". NOTE: If you make changes to your code and want to download it again, run "rm search.zip" before regenerating the zip file.
+Right click the file "search.zip" in the explorer bar on the left side, then choose "download". NOTE: If you make changes to your code and want to download it again, run "rm search.zip" before regenerating the zip file.

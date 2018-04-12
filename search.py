@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 import random
+import searchAgents
 
 
 class SearchProblem:
@@ -94,11 +95,9 @@ def depthFirstSearch(problem):
     # print ("Start's successors:", problem.getSuccessors(problem.getStartState()))
     state=problem.getStartState()
     # print("state",state)
-    path=[]
+
     closed=[]
     fringe=[]
-    pathToNode=[]
-    MovetoHereMap={}
 
     fringe.append((state,[]))
 
@@ -118,13 +117,61 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    state=problem.getStartState()
+    # print("state",state)
+
+    closed=[]
+    fringe=[]
+
+    fringe.append((state,[]))
+
+    while fringe:
+        #This is the only change needed, Instead of taking the most recently added node from the stack
+        # which would be the ones that are the deepest in the tree, it takes to oldest ones, which would
+        # have been added first
+        node,actions=fringe.pop(0)
+
+        if problem.isGoalState(node):
+            return actions
+
+        if node not in closed:
+            closed.append(node)
+            for child in problem.getSuccessors(node):
+                fringe.append((child[0],actions+[child[1]]))
+    if not fringe:
+        print("the fringe is empty cuz")
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    state=problem.getStartState()
+    # print("state",state)
+
+    closed=[]
+    fringe=[]
+
+    fringe.append((state,[],0))
+
+    # print("The min index is: ", popindex, "for the following item: ", fringe[popindex])
+
+    while fringe:
+        # print("The fringe is:", fringe)
+        minimum = min(fringe, key=lambda x: x[2])
+        popindex = fringe.index(minimum)
+        # print("The minimum value is apparently:", minimum, " and it has the index in fringe of: ", popindex)
+        node,actions,cost=fringe.pop(popindex)
+        # print("This is what we chose to pop:", node,actions,cost)
+        # input('')
+        if problem.isGoalState(node):
+            return actions
+
+        if node not in closed:
+            closed.append(node)
+            for child in problem.getSuccessors(node):
+                fringe.append((child[0],actions+[child[1]],cost+child[2]))
+
+    if not fringe:
+        print("the fringe is empty cuz")
 
 def nullHeuristic(state, problem=None):
     """
@@ -136,7 +183,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    print("The problem is:", problem)
+    closed=[]
+    fringe=[]
+    state=problem.getStartState()
+    start_forward_Cost=searchAgents.manhattanHeuristic(state,problem)
+    fringe.append((state,[],start_forward_Cost))
+
+    # print("The min index is: ", popindex, "for the following item: ", fringe[popindex])
+
+    while fringe:
+        # print("The fringe is:", fringe)
+        minimum = min(fringe, key=lambda x: x[2])
+        popindex = fringe.index(minimum)
+        # print("The minimum value is apparently:", minimum, " and it has the index in fringe of: ", popindex)
+        node,actions,Back_Cost=fringe.pop(popindex)
+        # print("This is what we chose to pop:", node,actions,cost)
+        # input('')
+        if problem.isGoalState(node):
+            return actions
+
+        if node not in closed:
+            closed.append(node)
+            for child in problem.getSuccessors(node):
+                Forward_cost=searchAgents.manhattanHeuristic(child[0],problem)
+                fringe.append((child[0],actions+[child[1]],Back_Cost+Forward_cost+child[2]))
+
+    if not fringe:
+        print("the fringe is empty cuz")
 
 
 # Abbreviations
